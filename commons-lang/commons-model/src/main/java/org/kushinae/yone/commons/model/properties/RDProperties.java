@@ -1,0 +1,18 @@
+package org.kushinae.yone.commons.model.properties;
+
+/**
+ * @author bnyte
+ * @since 1.0.0
+ */
+public class RDProperties extends Properties {
+
+    private String database;
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+}
