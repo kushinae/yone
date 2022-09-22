@@ -31,7 +31,7 @@ public class MySQLActuator<T> extends AbsRDBActuator<T> {
         try {
             statement = connection.createStatement();
             statement.execute(script);
-            return new HashMap<>();
+            return new T();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
