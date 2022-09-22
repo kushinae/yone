@@ -1,15 +1,17 @@
 package org.kushinae.yone.mysql.client;
 
-import org.kushinae.yone.client.RDClient;
+import org.kushinae.yone.client.AbsRDBClient;
+import org.kushinae.yone.client.Client;
 import org.kushinae.yone.client.actuator.mysql.MySQLActuator;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
+import org.kushinae.yone.commons.model.properties.Properties;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
 
 /**
  * @author bnyte
  * @since 1.0.0
  */
-public class MySQLClient<T> implements RDClient<T> {
+public class MySQLClient<T> extends AbsRDBClient<T> {
 
     protected volatile MySQLActuator<T> actuator;
 
@@ -35,6 +37,12 @@ public class MySQLClient<T> implements RDClient<T> {
     @Override
     public MySQLProperties getProperties() {
         return this.properties;
+    }
+
+    @Override
+    public Client<T> build(Properties properties) {
+        this.properties = (MySQLProperties) properties;
+        return this;
     }
 
     @Override

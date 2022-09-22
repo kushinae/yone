@@ -26,4 +26,6 @@ public interface Client<T> {
 
     Properties getProperties();
 
+    Client<T> build(Properties properties);
+
 }

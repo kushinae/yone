@@ -1,17 +1,20 @@
 package org.kushinae.yone.client.actuator.mysql;
 
-import org.kushinae.yone.client.actuator.RDActuator;
+import org.kushinae.yone.client.actuator.AbsRDBActuator;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * @author bnyte
  * @since 1.0.0
  */
-public class MySQLActuator<T> implements RDActuator<T> {
+public class MySQLActuator<T> extends AbsRDBActuator<T> {
 
     protected volatile Connection connection;
 
@@ -23,6 +26,15 @@ public class MySQLActuator<T> implements RDActuator<T> {
 
     @Override
     public T execute(String script) {
+        Connection connection = getConnection();
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            statement.execute(script);
+            return new HashMap<>();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
 
         return null;
@@ -34,7 +46,7 @@ public class MySQLActuator<T> implements RDActuator<T> {
                 if (null == connection) {
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
-                        connection = DriverManager.getConnection("", "", "");
+                        connection = DriverManager.getConnection(getJdbcURL(), "", "");
                     } catch (ClassNotFoundException | SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -42,6 +54,13 @@ public class MySQLActuator<T> implements RDActuator<T> {
             }
         }
         return connection;
+    }
+
+    private String getJdbcURL() {
+        return "jdbc:mysql://" +
+                this.properties.getIp() +
+                ":" +
+                (Objects.isNull(properties.getPort()) ? "80" : properties.getPort());
     }
 
     public MySQLProperties getProperties() {
