@@ -38,11 +38,14 @@ public class ProxyFactory<T> {
     }
 
     public Client<T> createInstance() {
+        // 先从缓存中获取确定是否存在
         Client<T> instance = (Client<T>) configuration.getClientCache().get(clientInstance.getClass());
         if (Objects.isNull(instance)) {
             synchronized (configuration.getClientCache()) {
                 if (Objects.isNull(instance)) {
+                    // 创建客户端代理处理器
                     ClientProxyHandler<T> handler = new ClientProxyHandler<>(configuration, this, clientInstance);
+                    // 创建代理对象
                     instance = (Client<T>) Proxy.newProxyInstance(clientInstance.getClass().getClassLoader(), new Class[]{Client.class, ClientProxy.class}, handler);
                 }
             }

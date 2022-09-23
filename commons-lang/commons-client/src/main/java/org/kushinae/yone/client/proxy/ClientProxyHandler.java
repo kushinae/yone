@@ -2,8 +2,10 @@ package org.kushinae.yone.client.proxy;
 
 import org.kushinae.yone.client.Client;
 import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
+import org.kushinae.yone.commons.model.util.MethodHandlersUtils;
 
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -50,7 +52,7 @@ public class ClientProxyHandler<T> implements InvocationHandler {
         this.configuration = configuration;
         this.proxyFactory = proxyFactory;
         this.targetClient = targetClient;
-        defaultMethodLookup = MethodHandles.lookup();
+        defaultMethodLookup = MethodHandlersUtils.lookup(targetClient.getClass());
     }
 
     @Override
@@ -67,8 +69,16 @@ public class ClientProxyHandler<T> implements InvocationHandler {
         return invoke;
     }
 
-    private Object invokeDefaultMethod(Object proxy, Method method, Object[] args) {
-        return null;
+    private Object invokeDefaultMethod(Object proxy, Method method, Object[] args) throws Throwable {
+        return defaultMethodLookup.findSpecial(
+                // 从中查询的类或者接口
+                targetClient.getClass(),
+                // 方法名称
+                method.getName(),
+                // 方法句柄类型 方法返回值以及方法形参类型列表
+                MethodType.methodType(method.getReturnType(), method.getParameterTypes()),
+                targetClient.getClass()
+        ).bindTo(proxy).invokeWithArguments(args);
     }
 
 
