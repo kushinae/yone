@@ -7,6 +7,8 @@ import org.kushinae.yone.commons.model.enums.EDataSourceType;
 import org.kushinae.yone.commons.model.properties.Properties;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
 
+import java.sql.SQLException;
+
 /**
  * @author bnyte
  * @since 1.0.0
@@ -46,7 +48,12 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
     }
 
     @Override
-    public T execute(String script) {
+    public Boolean testConnection() throws SQLException {
+        return execute(EDataSourceType.code(getDataSourceTypeCode()).getTestConnectionScript());
+    }
+
+    @Override
+    public Boolean execute(String script) throws SQLException {
         return getActuator().execute(script);
     }
 

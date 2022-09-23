@@ -2,6 +2,7 @@ package org.kushinae.yone.client.facetory;
 
 import org.kushinae.yone.client.Client;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
+import org.kushinae.yone.commons.model.exception.ClientNotFoundException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -30,7 +31,7 @@ public class ClientFactory {
             throw new RuntimeException(e);
         }
 
-        return null;
+        throw new ClientNotFoundException();
     }
 
     public static Client<?> createClient(EDataSourceType dataSourceType) {

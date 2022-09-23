@@ -1,13 +1,14 @@
 package org.kushinae.yone.client.actuator.mysql;
 
 import org.kushinae.yone.client.actuator.AbsRDBActuator;
+import org.kushinae.yone.commons.model.exception.PropertiesException;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
+import org.kushinae.yone.commons.model.util.StringUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -21,23 +22,35 @@ public class MySQLActuator<T> extends AbsRDBActuator<T> {
     private MySQLProperties properties;
 
     public MySQLActuator(MySQLProperties properties) {
+        assertMySQLProperties(properties);
         this.properties = properties;
     }
 
-    @Override
-    public T execute(String script) {
-        Connection connection = getConnection();
-        Statement statement = null;
-        try {
-            statement = connection.createStatement();
-            statement.execute(script);
-            return new T();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    private void assertMySQLProperties(MySQLProperties properties) {
+        if (!StringUtils.hasText(properties.getIp())) {
+            throw new PropertiesException("mysql ip cannot be empty");
         }
 
+        if (!StringUtils.hasText(properties.getUsername())) {
+            throw new PropertiesException("mysql username cannot be empty");
+        }
 
-        return null;
+        if (!StringUtils.hasText(properties.getPassword())) {
+            throw new PropertiesException("mysql password cannot be empty");
+        }
+
+        if (!StringUtils.hasText(properties.getDatabase())) {
+            throw new PropertiesException("mysql database cannot be empty");
+        }
+    }
+
+    @Override
+    public Boolean execute(String script) throws SQLException {
+        Connection connection = getConnection();
+        Statement statement = connection.createStatement();
+        // execute target sql script
+        statement.execute(script);
+        return true;
     }
 
     public Connection getConnection() {
@@ -46,7 +59,10 @@ public class MySQLActuator<T> extends AbsRDBActuator<T> {
                 if (null == connection) {
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
-                        connection = DriverManager.getConnection(getJdbcURL(), "", "");
+                        connection = DriverManager.getConnection(
+                                getJdbcURL(),
+                                this.getProperties().getUsername(),
+                                this.getProperties().getPassword());
                     } catch (ClassNotFoundException | SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -60,7 +76,9 @@ public class MySQLActuator<T> extends AbsRDBActuator<T> {
         return "jdbc:mysql://" +
                 this.properties.getIp() +
                 ":" +
-                (Objects.isNull(properties.getPort()) ? "80" : properties.getPort());
+                (Objects.isNull(properties.getPort()) ? "3306" : properties.getPort()) +
+                "/" +
+                this.getProperties().getDatabase();
     }
 
     public MySQLProperties getProperties() {

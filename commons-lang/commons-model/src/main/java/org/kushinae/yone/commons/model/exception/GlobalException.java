@@ -11,7 +11,7 @@ public class GlobalException extends RuntimeException {
     /**
      * error info
      */
-    private ErrorCode error = ErrorCode.UNKNOWN_EXCEPTION;
+    protected ErrorCode error = ErrorCode.UNKNOWN_EXCEPTION;
 
     public GlobalException() {
     }

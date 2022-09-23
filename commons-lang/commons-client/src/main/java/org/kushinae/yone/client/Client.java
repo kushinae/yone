@@ -3,6 +3,8 @@ package org.kushinae.yone.client;
 import org.kushinae.yone.client.actuator.Actuator;
 import org.kushinae.yone.commons.model.properties.Properties;
 
+import java.sql.SQLException;
+
 /**
  * base data source client
  * @author bnyte
@@ -22,10 +24,12 @@ public interface Client<T> {
      */
     Actuator<T> getActuator();
 
-    T execute(String script);
+    Boolean execute(String script) throws SQLException;
 
     Properties getProperties();
 
     Client<T> build(Properties properties);
+
+    Boolean testConnection() throws SQLException;
 
 }

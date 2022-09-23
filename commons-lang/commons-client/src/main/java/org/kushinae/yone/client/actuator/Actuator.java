@@ -1,11 +1,13 @@
 package org.kushinae.yone.client.actuator;
 
+import java.sql.SQLException;
+
 /**
  * @author bnyte
  * @since 1.0.0
  */
 public interface Actuator<T> {
 
-    T execute(String script);
+    Boolean execute(String script) throws SQLException;
 
 }
