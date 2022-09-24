@@ -20,11 +20,11 @@ class MySQLClientTest {
 
     {
         properties = new MySQLProperties();
-        properties.setIp("mysql-1.9zdata.cn");
-        properties.setPort(3307);
-        properties.setDatabase("db_ljx_test");
-        properties.setUsername("dmp");
-        properties.setPassword("Ioubuy123");
+        properties.setIp("121.40.209.124");
+        properties.setPort(6033);
+        properties.setDatabase("azir");
+        properties.setUsername("root");
+        properties.setPassword("5c2891d9-45fb-4240-9f0e-50222099d9bd");
     }
 
     @Test
@@ -51,8 +51,20 @@ class MySQLClientTest {
 
     @Test
     void build() {
+        // 加载客户端
         Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class);
-        System.out.println(client.build(properties));
+        // 构建客户端相关属性
+        client.build(properties);
+
+        // 创建全局配置对象
+        GlobalConfiguration configuration = new GlobalConfiguration();
+
+        // 创建代理工厂
+        ProxyFactory<MySQLProperties> factory = new ProxyFactory<>(client, configuration);
+
+        // 通过代理工厂获取客户端的代理对象
+        Client<MySQLProperties> instance = factory.createInstance();
+        System.out.println("✅最后获取执行的结果通过返回值获取：" + instance.build(properties));
     }
 
     @Test

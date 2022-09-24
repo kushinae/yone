@@ -32,4 +32,6 @@ public interface Client<T> {
 
     Boolean testConnection() throws SQLException;
 
+    Boolean buildComplete();
+
 }
