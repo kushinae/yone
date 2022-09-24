@@ -18,7 +18,7 @@ public interface Interceptor<T> {
     /**
      * 在目标方法执行之前调用该方法
      */
-    default void after() {
+    default void after(Client<T> client) {
     }
 
 }

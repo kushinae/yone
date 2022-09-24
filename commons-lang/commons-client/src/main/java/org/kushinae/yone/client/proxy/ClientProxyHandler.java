@@ -93,8 +93,18 @@ public class ClientProxyHandler<T> implements InvocationHandler {
             // 目标方法执行结果
 
             // 方法执行之后
+            executeInterceptorAfter(interceptors);
         }
         return invoke;
+    }
+
+    private void executeInterceptorAfter(List<Class<? extends Interceptor>> interceptors) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        for (Class<? extends Interceptor> interceptor : interceptors) {
+            Constructor<? extends Interceptor> constructor = interceptor.getConstructor();
+            Interceptor instance = constructor.newInstance();
+            Method before = interceptor.getMethod("after", Client.class);
+            before.invoke(instance, targetClient);
+        }
     }
 
     private boolean isSkipInterceptor(Method method) {

@@ -15,7 +15,7 @@ public class PropertiesBuildInterceptor<T> implements Interceptor<T> {
     }
 
     @Override
-    public void after() {
-        Interceptor.super.after();
+    public void after(Client<T> client) {
+        Interceptor.super.after(client);
     }
 }
