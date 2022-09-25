@@ -107,7 +107,19 @@ class MySQLClientTest {
         System.out.println(instance.toString());
     }
 
-    public MethodHandles.Lookup lookup(Class<?> callerClass) {
-        return null;
+    @Test
+    void testDatabases() throws SQLException {
+        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class).build(properties);
+        GlobalConfiguration configuration = new GlobalConfiguration();
+        Client<MySQLProperties> instance = new ProxyFactory<>(client, configuration).createInstance();
+        System.out.println(instance.databases(true));
+    }
+
+    @Test
+    void testTables() throws SQLException {
+        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class).build(properties);
+        GlobalConfiguration configuration = new GlobalConfiguration();
+        Client<MySQLProperties> instance = new ProxyFactory<>(client, configuration).createInstance();
+        System.out.println(instance.tables("azir"));
     }
 }

@@ -4,6 +4,7 @@ import org.kushinae.yone.client.actuator.Actuator;
 import org.kushinae.yone.commons.model.properties.Properties;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * base data source client
@@ -59,5 +60,15 @@ public interface Client<T> {
      *  之后且需要其对应的属性赋值成功返回true 否则返回false
      */
     Boolean buildComplete();
+
+    /**
+     * 获取当前数据源所有库
+     * @param skipDefault 是否跳过当前数据源的默认数据库
+     * @return 数据库列表
+     * @throws SQLException 脚本执行异常
+     */
+    List<String> databases(boolean skipDefault) throws SQLException;
+
+    List<String> tables(String database) throws SQLException;
 
 }
