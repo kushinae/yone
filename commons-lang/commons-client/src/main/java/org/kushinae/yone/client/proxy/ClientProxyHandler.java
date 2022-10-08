@@ -7,6 +7,8 @@ import org.kushinae.yone.client.interceptor.Interceptor;
 import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.util.CollectionUtils;
 import org.kushinae.yone.commons.model.util.MethodHandlersUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -23,6 +25,8 @@ import java.util.Objects;
  * @since 1.0.0
  */
 public class ClientProxyHandler<T> implements InvocationHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(ClientProxyHandler.class);
 
     private Client<T> targetClient;
 
@@ -86,6 +90,7 @@ public class ClientProxyHandler<T> implements InvocationHandler {
         List<Class<? extends Interceptor>> interceptors = getInterceptors();
         executeInterceptorBefore(interceptors);
         Object invoke = null;
+
         if (!endMethodExecution) {
             // 执行目标方法
             invoke = method.invoke(targetClient, args);
@@ -141,6 +146,9 @@ public class ClientProxyHandler<T> implements InvocationHandler {
                 Interceptor instance = constructor.newInstance();
                 Method before = interceptor.getMethod("before", Client.class);
                 endMethodExecution = !(boolean) before.invoke(instance, targetClient);
+                if (log.isDebugEnabled())
+                    if (endMethodExecution)
+                        log.debug("The interceptor {}#before() terminated the execution of the target method", instance.getClass().getName());
             }
         }
     }

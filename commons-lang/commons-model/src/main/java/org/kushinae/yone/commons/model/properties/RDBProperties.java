@@ -15,4 +15,11 @@ public class RDBProperties extends Properties {
     public void setDatabase(String database) {
         this.database = database;
     }
+
+    @Override
+    public String toString() {
+        return "RDBProperties{" +
+                "database='" + database + '\'' +
+                "} " + super.toString();
+    }
 }

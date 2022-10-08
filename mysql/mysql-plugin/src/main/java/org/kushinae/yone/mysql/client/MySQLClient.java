@@ -34,6 +34,7 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
     private MySQLProperties properties;
 
     @Override
+    @SkipInterceptor
     public Integer getDataSourceTypeCode() {
         return EDataSourceType.MY_SQL.getCode();
     }

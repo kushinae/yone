@@ -8,11 +8,24 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>commons-lang</artifactId>
+    <modules>
+        <module>commons-model</module>
+        <module>commons-client</module>
+    </modules>
     <packaging>pom</packaging>
 
     <name>commons-lang</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
     </dependencies>
 </project>

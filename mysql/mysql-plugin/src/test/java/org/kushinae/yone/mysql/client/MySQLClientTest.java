@@ -3,6 +3,8 @@ package org.kushinae.yone.mysql.client;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.kushinae.yone.client.Client;
+import org.kushinae.yone.client.Yone;
+import org.kushinae.yone.client.actuator.Actuator;
 import org.kushinae.yone.client.facetory.ClientFactory;
 import org.kushinae.yone.client.proxy.ClientProxyHandler;
 import org.kushinae.yone.client.proxy.ProxyFactory;
@@ -13,8 +15,11 @@ import org.kushinae.yone.commons.model.util.MethodHandlersUtils;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
+import java.util.Objects;
 
 class MySQLClientTest {
+
+    private static final GlobalConfiguration config = new GlobalConfiguration();
 
     private MySQLProperties properties;
 
@@ -22,31 +27,33 @@ class MySQLClientTest {
         properties = new MySQLProperties();
         properties.setIp("121.40.209.124");
         properties.setPort(6033);
-        properties.setDatabase("azir");
+        properties.setDatabase("bnyte");
         properties.setUsername("root");
         properties.setPassword("5c2891d9-45fb-4240-9f0e-50222099d9bd");
     }
 
     @Test
     void getDataSourceTypeCode() {
-
+        Client<MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class);
+        assert client.getDataSourceTypeCode().equals(EDataSourceType.MY_SQL.getCode());
     }
 
     @Test
     void getActuator() {
+        Client<MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class, properties);
+        assert Objects.nonNull(client.getActuator());
     }
 
     @Test
     void getProperties() {
-        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class);
-        client.build(properties);
-        System.out.println(client.getProperties());
+        Client<MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class, properties);
+        assert Objects.nonNull(client);
     }
 
     @Test
     void execute() throws SQLException {
-        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class);
-        System.out.println(client.build(properties).execute("insert into user values (null, 1, 'ggboy14', now())"));
+        Client<MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class, properties);
+        assert Objects.nonNull(client.execute("select version()"));
     }
 
     @Test
@@ -69,8 +76,8 @@ class MySQLClientTest {
 
     @Test
     void testConnection() throws SQLException {
-        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class);
-        System.out.println(client.build(properties).testConnection());
+        Client<MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class, properties);
+        System.out.println(client.testConnection());
     }
 
     @Test
@@ -109,17 +116,13 @@ class MySQLClientTest {
 
     @Test
     void testDatabases() throws SQLException {
-        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class).build(properties);
-        GlobalConfiguration configuration = new GlobalConfiguration();
-        Client<MySQLProperties> instance = new ProxyFactory<>(client, configuration).createInstance();
-        System.out.println(instance.databases(true));
+        Client<? extends MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), properties.getClass(), properties);
+        client.databases(true);
     }
 
     @Test
     void testTables() throws SQLException {
-        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class).build(properties);
-        GlobalConfiguration configuration = new GlobalConfiguration();
-        Client<MySQLProperties> instance = new ProxyFactory<>(client, configuration).createInstance();
-        System.out.println(instance.tables("azir"));
+        Client<? extends MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), properties.getClass(), properties);
+        System.out.println(client.tables("bnyte"));
     }
 }

@@ -9,6 +9,9 @@ import org.kushinae.yone.commons.model.enums.ErrorCode;
 public class PropertiesException extends GlobalException {
 
     public PropertiesException() {
+        super(ErrorCode.PROPERTY_IS_INVALID.getMessage());
+        error = ErrorCode.PROPERTY_IS_INVALID;
+        error.setMessage(ErrorCode.PROPERTY_IS_INVALID.getMessage());
     }
 
     public PropertiesException(ErrorCode error) {
@@ -17,7 +20,7 @@ public class PropertiesException extends GlobalException {
 
     public PropertiesException(String message) {
         error = ErrorCode.PROPERTY_IS_INVALID;
-        error.setMessage(String.format(error.getMessage(), message));
+        error.setMessage(ErrorCode.PROPERTY_IS_INVALID.getMessage());
     }
 
     public PropertiesException(String message, Throwable cause) {
