@@ -19,9 +19,7 @@ import java.util.Objects;
 
 class MySQLClientTest {
 
-    private static final GlobalConfiguration config = new GlobalConfiguration();
-
-    private MySQLProperties properties;
+    private final MySQLProperties properties;
 
     {
         properties = new MySQLProperties();

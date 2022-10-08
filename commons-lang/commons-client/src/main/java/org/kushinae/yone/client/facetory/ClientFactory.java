@@ -15,6 +15,8 @@ import java.util.ServiceLoader;
  */
 public class ClientFactory {
 
+    // added java unchecked code style warnings
+    @SuppressWarnings("unchecked")
     public static <T> Client<T> createClient(EDataSourceType dataSourceType, Class<T> resultType) {
         try {
             Constructor<T> constructor = resultType.getConstructor();
@@ -34,6 +36,8 @@ public class ClientFactory {
         throw new ClientNotFoundException();
     }
 
+    // added java unchecked code style warnings
+    @SuppressWarnings("unchecked")
     public static Client<?> createClient(EDataSourceType dataSourceType) {
         ServiceLoader<?> clients = ServiceLoader.load(Client.class);
         Iterator<Client<?>> clientIterator = (Iterator<Client<?>>) clients.iterator();
@@ -44,7 +48,7 @@ public class ClientFactory {
             }
         }
 
-        return null;
+        throw new ClientNotFoundException();
     }
 
 }

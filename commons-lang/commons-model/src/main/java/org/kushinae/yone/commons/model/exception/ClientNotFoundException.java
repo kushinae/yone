@@ -9,6 +9,7 @@ import org.kushinae.yone.commons.model.enums.ErrorCode;
 public class ClientNotFoundException extends GlobalException {
 
     public ClientNotFoundException() {
+        super(ErrorCode.CLIENT_NOT_FOUND.getMessage());
         error = ErrorCode.CLIENT_NOT_FOUND;
     }
 
