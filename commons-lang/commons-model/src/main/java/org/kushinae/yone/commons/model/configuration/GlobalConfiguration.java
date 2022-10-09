@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author bnyte
  * @since 1.0.0
  */
+@SuppressWarnings("unused")
 public class GlobalConfiguration {
 
     /**
@@ -13,13 +14,23 @@ public class GlobalConfiguration {
      *  key: data source type code
      *  value: data source client instance
      */
-    private ConcurrentHashMap<Class, Object> clientCache = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Class<?>, Object> clientCache = new ConcurrentHashMap<>();
 
-    public ConcurrentHashMap<Class, Object> getClientCache() {
+    public ConcurrentHashMap<Class<?>, Object> getClientCache() {
         return clientCache;
     }
 
-    public void setClientCache(ConcurrentHashMap<Class, Object> clientCache) {
+    private Boolean enableCamelCase = true;
+
+    public void setClientCache(ConcurrentHashMap<Class<?>, Object> clientCache) {
         this.clientCache = clientCache;
+    }
+
+    public Boolean getEnableCamelCase() {
+        return enableCamelCase;
+    }
+
+    public void setEnableCamelCase(Boolean enableCamelCase) {
+        this.enableCamelCase = enableCamelCase;
     }
 }

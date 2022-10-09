@@ -24,6 +24,7 @@
         <!-- logback version -->
         <logback.version>1.4.3</logback.version>
         <slf4j-api.version>2.0.3</slf4j-api.version>
+        <guava.version>31.1-jre</guava.version>
 
         <!-- mysql plugin dependencies version managers -->
         <mysql.version>8.0.30</mysql.version>
@@ -71,6 +72,15 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j-api.version}</version>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 

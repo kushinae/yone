@@ -1,17 +1,15 @@
 package org.kushinae.yone.mysql.client;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.kushinae.yone.client.Client;
 import org.kushinae.yone.client.Yone;
-import org.kushinae.yone.client.actuator.Actuator;
 import org.kushinae.yone.client.facetory.ClientFactory;
-import org.kushinae.yone.client.proxy.ClientProxyHandler;
 import org.kushinae.yone.client.proxy.ProxyFactory;
 import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
 import org.kushinae.yone.commons.model.util.MethodHandlersUtils;
+import org.kushinae.yone.mysql.client.dto.User;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
@@ -122,5 +120,11 @@ class MySQLClientTest {
     void testTables() throws SQLException {
         Client<? extends MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), properties.getClass(), properties);
         System.out.println(client.tables("bnyte"));
+    }
+
+    @Test
+    void testExecuteQueryWithSingleResult() throws Exception {
+        Client<? extends MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), properties.getClass(), properties);
+        System.out.println(client.executeQueryWithSingleResult("select * from t_user", User.class));
     }
 }

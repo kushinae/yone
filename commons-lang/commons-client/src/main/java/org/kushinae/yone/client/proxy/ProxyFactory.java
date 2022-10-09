@@ -10,6 +10,7 @@ import java.util.Objects;
  * @author bnyte
  * @since 1.0.0
  */
+@SuppressWarnings("unused")
 public class ProxyFactory<T> {
 
     private Client<T> clientInstance;
@@ -37,17 +38,18 @@ public class ProxyFactory<T> {
         this.configuration = configuration;
     }
 
+    @SuppressWarnings({"unchecked"})
     public Client<T> createInstance() {
         // 先从缓存中获取确定是否存在
         Client<T> instance = (Client<T>) configuration.getClientCache().get(clientInstance.getClass());
         if (Objects.isNull(instance)) {
             synchronized (configuration.getClientCache()) {
-                if (Objects.isNull(instance)) {
-                    // 创建客户端代理处理器
-                    ClientProxyHandler<T> handler = new ClientProxyHandler<>(configuration, this, clientInstance);
-                    // 创建代理对象
-                    instance = (Client<T>) Proxy.newProxyInstance(clientInstance.getClass().getClassLoader(), new Class[]{Client.class, ClientProxy.class}, handler);
-                }
+                // 创建客户端代理处理器
+                ClientProxyHandler<T> handler = new ClientProxyHandler<>(configuration, this, clientInstance);
+                // 创建代理对象
+                instance = (Client<T>) Proxy.newProxyInstance(clientInstance.getClass().getClassLoader(), new Class[]{Client.class, ClientProxy.class}, handler);
+                instance.setConfiguration(configuration);
+                configuration.getClientCache().put(instance.getClass(), instance);
             }
         }
         return instance;

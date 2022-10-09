@@ -6,12 +6,16 @@ import org.kushinae.yone.client.actuator.mysql.MySQLActuator;
 import org.kushinae.yone.client.annotation.InterceptorAdvice;
 import org.kushinae.yone.client.annotation.SkipInterceptor;
 import org.kushinae.yone.client.interceptor.PropertiesBuildInterceptor;
+import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.constant.DefaultSchemaConstant;
 import org.kushinae.yone.commons.model.constant.ShowDatabasesConstant;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
 import org.kushinae.yone.commons.model.properties.Properties;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
+import org.kushinae.yone.commons.model.util.StringUtils;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -104,6 +108,33 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
             tables.add(tableName);
         }
         return tables;
+    }
+
+    @Override
+    public <R> R executeQueryWithSingleResult(String script, Class<R> resultClass) throws Exception {
+        Connection connection = getActuator().getConnection();
+        ResultSet query = connection.createStatement().executeQuery(script);
+        Constructor<R> resultConstructor = resultClass.getConstructor();
+        R instance = resultConstructor.newInstance();
+        GlobalConfiguration configuration = getConfiguration();
+
+        while (query.next()) {
+            for (Field declaredField : resultClass.getDeclaredFields()) {
+                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(declaredField.getName(), resultClass);
+                // TODO: 2022/10/9 应该先if当前属性上的注解然后在if全局配置
+                String columnLabel = configuration.getEnableCamelCase() ? StringUtils.lowerCamel2LowerUnderscore(declaredField.getName()) : declaredField.getName();
+                Object dbData = null;
+                Class<?> fieldType = declaredField.getType();
+                dbData = query.getString(columnLabel);
+                propertyDescriptor.getWriteMethod().invoke(instance, dbData);
+            }
+        }
+        return instance;
+    }
+
+    @Override
+    public List<T> executeWithListResult(String script) {
+        return null;
     }
 
     @Override

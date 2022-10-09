@@ -1,6 +1,7 @@
 package org.kushinae.yone.client;
 
 import org.kushinae.yone.client.actuator.Actuator;
+import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.properties.Properties;
 
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import java.util.List;
  * @author bnyte
  * @since 1.0.0
  */
+@SuppressWarnings({"unused"})
 public interface Client<T> {
 
     /**
@@ -69,6 +71,20 @@ public interface Client<T> {
      */
     List<String> databases(boolean skipDefault) throws SQLException;
 
+    /**
+     * 获取当前数据库的所有数据库表列表名称
+     * @param database 指定数据库名
+     * @return 指定数据库列表下的所有表名称
+     * @throws SQLException sql联通异常
+     */
     List<String> tables(String database) throws SQLException;
+
+    <R> R executeQueryWithSingleResult(String script, Class<R> resultClass) throws Exception;
+
+    List<T> executeWithListResult(String script);
+
+    void setConfiguration(GlobalConfiguration configuration);
+
+    GlobalConfiguration getConfiguration();
 
 }
