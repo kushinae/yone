@@ -1,5 +1,7 @@
 package org.kushinae.yone.mysql.client.dto;
 
+import java.util.Date;
+
 /**
  * @author bnyte
  * @since 1.0.0
@@ -17,7 +19,9 @@ public class User {
 
     private String avatar;
 
-    private String gmtCreate;
+    private Date gmtCreate;
+
+    private boolean deleted;
 
     public String getId() {
         return id;
@@ -59,12 +63,20 @@ public class User {
         this.avatar = avatar;
     }
 
-    public String getGmtCreate() {
+    public Date getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(String gmtCreate) {
+    public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override
@@ -76,6 +88,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", gmtCreate='" + gmtCreate + '\'' +
+                ", deleted=" + deleted +
                 '}';
     }
 }

@@ -10,6 +10,8 @@ import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.constant.DefaultSchemaConstant;
 import org.kushinae.yone.commons.model.constant.ShowDatabasesConstant;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
+import org.kushinae.yone.commons.model.enums.EDataTypeTransfer;
+import org.kushinae.yone.commons.model.enums.EJavaBasicDataType;
 import org.kushinae.yone.commons.model.properties.Properties;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
 import org.kushinae.yone.commons.model.util.StringUtils;
@@ -119,17 +121,23 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
         GlobalConfiguration configuration = getConfiguration();
 
         while (query.next()) {
-            for (Field declaredField : resultClass.getDeclaredFields()) {
-                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(declaredField.getName(), resultClass);
-                // TODO: 2022/10/9 应该先if当前属性上的注解然后在if全局配置
-                String columnLabel = configuration.getEnableCamelCase() ? StringUtils.lowerCamel2LowerUnderscore(declaredField.getName()) : declaredField.getName();
-                Object dbData = null;
-                Class<?> fieldType = declaredField.getType();
-                dbData = query.getString(columnLabel);
+            for (Field field : resultClass.getDeclaredFields()) {
+                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(field.getName(), resultClass);
+                Object dbData = getColumnDataWithFieldType(field, query);
                 propertyDescriptor.getWriteMethod().invoke(instance, dbData);
             }
         }
         return instance;
+    }
+
+    private Object getColumnDataWithFieldType(Field field, ResultSet resultSet) throws SQLException {
+        GlobalConfiguration configuration = getConfiguration();
+        String columnLabel = configuration.getEnableCamelCase() ? StringUtils.lowerCamel2LowerUnderscore(field.getName()) : field.getName();
+        Class<?> fieldType = field.getType();
+        if (EDataTypeTransfer.basicDataType(fieldType)) {
+            return EJavaBasicDataType.transfer(fieldType).getDataWithFieldType(columnLabel, resultSet);
+        }
+        return null;
     }
 
     @Override

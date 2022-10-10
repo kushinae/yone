@@ -17,6 +17,7 @@ public enum ErrorCode {
 
     CLIENT_NOT_FOUND(900000, "data source client not found"),
     UNSUPPORTED_DATASOURCE_TYPE(900001, "unsupported data source type"),
+    DATA_TYPE_NOT_FOUND(900002, "data type not found"),
     ;
 
     ErrorCode(Integer code, String message) {
