@@ -1,6 +1,6 @@
 package org.kushinae.yone.client;
 
-import org.kushinae.yone.client.facetory.ClientFactory;
+import org.kushinae.yone.client.factory.ClientFactory;
 import org.kushinae.yone.client.proxy.ProxyFactory;
 import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;

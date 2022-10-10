@@ -49,8 +49,7 @@ public class MySQLActuator<T> extends AbsRDBActuator<T> {
         Connection connection = getConnection();
         Statement statement = connection.createStatement();
         // execute target sql script
-        statement.execute(script);
-        return true;
+        return statement.execute(script);
     }
 
     public Connection getConnection() {

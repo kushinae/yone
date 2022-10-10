@@ -1,4 +1,4 @@
-package org.kushinae.yone.client.facetory;
+package org.kushinae.yone.client.factory;
 
 import org.kushinae.yone.client.Client;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
