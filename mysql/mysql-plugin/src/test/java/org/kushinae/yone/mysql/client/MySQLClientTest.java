@@ -3,7 +3,7 @@ package org.kushinae.yone.mysql.client;
 import org.junit.jupiter.api.Test;
 import org.kushinae.yone.client.Client;
 import org.kushinae.yone.client.Yone;
-import org.kushinae.yone.client.factory.ClientFactory;
+import org.kushinae.yone.client.ClientFactory;
 import org.kushinae.yone.client.proxy.ProxyFactory;
 import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
@@ -12,6 +12,7 @@ import org.kushinae.yone.commons.model.util.MethodHandlersUtils;
 import org.kushinae.yone.mysql.client.dto.User;
 
 import java.lang.invoke.MethodHandles;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -53,21 +54,11 @@ class MySQLClientTest {
     }
 
     @Test
-    void build() {
+    void build() throws SQLException {
         // 加载客户端
-        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class);
-        // 构建客户端相关属性
-        client.build(properties);
-
-        // 创建全局配置对象
-        GlobalConfiguration configuration = new GlobalConfiguration();
-
-        // 创建代理工厂
-        ProxyFactory<MySQLProperties> factory = new ProxyFactory<>(client, configuration);
-
-        // 通过代理工厂获取客户端的代理对象
-        Client<MySQLProperties> instance = factory.createInstance();
-        System.out.println("✅最后获取执行的结果通过返回值获取：" + instance.build(properties));
+        Client<?> client = Yone.client(EDataSourceType.MY_SQL.getCode(), properties);
+        Boolean testConnection = client.testConnection();
+        System.out.println(testConnection);
     }
 
     @Test
@@ -78,20 +69,8 @@ class MySQLClientTest {
 
     @Test
     void testProxy() throws SQLException {
-        // 加载客户端
-        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class);
-        // 构建客户端相关属性
-        client.build(properties);
-
-        // 创建全局配置对象
-        GlobalConfiguration configuration = new GlobalConfiguration();
-
-        // 创建代理工厂
-        ProxyFactory<MySQLProperties> factory = new ProxyFactory<>(client, configuration);
-
-        // 通过代理工厂获取客户端的代理对象
-        Client<MySQLProperties> instance = factory.createInstance();
-        System.out.println("✅最后获取执行的结果通过返回值获取：" + instance.testConnection());
+        Client<Object> client = Yone.client(EDataSourceType.MY_SQL.getCode()).build(properties);
+        System.out.println(client.testConnection());
     }
 
     @Test
@@ -102,12 +81,6 @@ class MySQLClientTest {
 
     @Test
     void testToString() {
-        Client<MySQLProperties> client = ClientFactory.createClient(EDataSourceType.MY_SQL, MySQLProperties.class);
-        client.build(properties);
-        GlobalConfiguration configuration = new GlobalConfiguration();
-        ProxyFactory<MySQLProperties> factory = new ProxyFactory<>(client, configuration);
-        Client<MySQLProperties> instance = factory.createInstance();
-        System.out.println(instance.toString());
     }
 
     @Test

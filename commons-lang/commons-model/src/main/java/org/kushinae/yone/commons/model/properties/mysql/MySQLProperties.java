@@ -8,5 +8,4 @@ import org.kushinae.yone.commons.model.properties.RDBProperties;
  */
 public class MySQLProperties extends RDBProperties {
 
-
 }

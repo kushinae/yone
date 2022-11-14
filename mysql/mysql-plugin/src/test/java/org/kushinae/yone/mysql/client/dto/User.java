@@ -1,5 +1,6 @@
 package org.kushinae.yone.mysql.client.dto;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
@@ -91,4 +92,5 @@ public class User {
                 ", deleted=" + deleted +
                 '}';
     }
+
 }

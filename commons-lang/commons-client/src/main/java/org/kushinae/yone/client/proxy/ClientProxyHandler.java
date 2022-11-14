@@ -88,7 +88,7 @@ public class ClientProxyHandler<T> implements InvocationHandler {
 
         // 执行之前获取所有拦截器
         List<Class<? extends Interceptor>> interceptors = getInterceptors();
-        executeInterceptorBefore(interceptors);
+        executeInterceptorBefore(interceptors, method, args);
         Object invoke = null;
 
         if (!endMethodExecution) {
@@ -139,13 +139,13 @@ public class ClientProxyHandler<T> implements InvocationHandler {
         }
     }
 
-    private void executeInterceptorBefore(List<Class<? extends Interceptor>> interceptors) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    private void executeInterceptorBefore(List<Class<? extends Interceptor>> interceptors, Method method, Object[] args) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         if (enableInterceptor && !CollectionUtils.isEmpty(interceptors)) {
             for (Class<? extends Interceptor> interceptor : interceptors) {
                 Constructor<? extends Interceptor> constructor = interceptor.getConstructor();
                 Interceptor instance = constructor.newInstance();
-                Method before = interceptor.getMethod("before", Client.class);
-                endMethodExecution = !(boolean) before.invoke(instance, targetClient);
+                Method before = interceptor.getMethod("before", Client.class, Method.class, Object[].class);
+                endMethodExecution = !(boolean) before.invoke(instance, targetClient, method, args);
                 if (log.isDebugEnabled())
                     if (endMethodExecution)
                         log.debug("The interceptor {}#before() terminated the execution of the target method", instance.getClass().getName());

@@ -1,4 +1,4 @@
-package org.kushinae.yone.client.factory;
+package org.kushinae.yone.client;
 
 import org.kushinae.yone.client.Client;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
@@ -15,7 +15,7 @@ public class ClientFactory {
 
     // added java unchecked code style warnings
     @SuppressWarnings("unchecked")
-    public static <T> Client<T> createClient(EDataSourceType dataSourceType, Class<T> resultType) {
+    protected static <T> Client<T> createClient(EDataSourceType dataSourceType, Class<T> resultType) {
         //            Constructor<T> constructor = resultType.getConstructor();
 //            T instance = constructor.newInstance();
         ServiceLoader<T> clients = (ServiceLoader<T>) ServiceLoader.load(Client.class);
@@ -32,7 +32,7 @@ public class ClientFactory {
 
     // added java unchecked code style warnings
     @SuppressWarnings("unchecked")
-    public static Client<?> createClient(EDataSourceType dataSourceType) {
+    protected static Client<?> createClient(EDataSourceType dataSourceType) {
         ServiceLoader<?> clients = ServiceLoader.load(Client.class);
         Iterator<Client<?>> clientIterator = (Iterator<Client<?>>) clients.iterator();
         while (clientIterator.hasNext()) {

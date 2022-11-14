@@ -14,6 +14,7 @@ import org.kushinae.yone.commons.model.enums.EDataTypeTransfer;
 import org.kushinae.yone.commons.model.enums.EJavaBasicDataType;
 import org.kushinae.yone.commons.model.properties.Properties;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
+import org.kushinae.yone.commons.model.util.ObjectUtils;
 import org.kushinae.yone.commons.model.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
@@ -23,7 +24,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +37,10 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
 
     protected volatile MySQLActuator<T> actuator;
 
-    private MySQLProperties properties;
+    @Override
+    public Connection getConnection() {
+        return getActuator().getConnection();
+    }
 
     @Override
     @SkipInterceptor
@@ -59,13 +62,13 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
 
     @Override
     public MySQLProperties getProperties() {
-        return this.properties;
+        return (MySQLProperties) getActuator().getProperties();
     }
 
     @Override
     @SkipInterceptor
     public Client<T> build(Properties properties) {
-        this.properties = (MySQLProperties) properties;
+        actuator = new MySQLActuator<>((MySQLProperties) properties);
         return this;
     }
 
@@ -76,12 +79,12 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
 
     @Override
     public Boolean buildComplete() {
-        return Objects.nonNull(getProperties());
+        return ObjectUtils.nonNull(actuator) && ObjectUtils.nonNull(getProperties());
     }
 
     protected List<String> databases() throws SQLException {
         List<String> databases = new ArrayList<>();
-        Connection connection = getActuator().getConnection();
+        Connection connection = getConnection();
         ResultSet query = connection.createStatement().executeQuery(ShowDatabasesConstant.MYSQL);
         // if it has next data
         while (query.next()) {
@@ -102,8 +105,8 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
     @Override
     public List<String> tables(String database) throws SQLException {
         List<String> tables = new ArrayList<>();
-        this.properties.setDatabase(database);
-        Connection connection = getActuator().getConnection();
+        getProperties().setDatabase(database);
+        Connection connection = getConnection();
         ResultSet query = connection.createStatement().executeQuery("show tables");
         while (query.next()) {
             String tableName = query.getString(1);
@@ -114,7 +117,7 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
 
     @Override
     public <R> R executeQueryWithSingleResult(String script, Class<R> resultClass) throws Exception {
-        Connection connection = getActuator().getConnection();
+        Connection connection = getConnection();
         ResultSet query = connection.createStatement().executeQuery(script);
         Constructor<R> resultConstructor = resultClass.getConstructor();
         R instance = resultConstructor.newInstance();

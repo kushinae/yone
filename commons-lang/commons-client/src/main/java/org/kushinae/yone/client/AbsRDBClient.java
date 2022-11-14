@@ -1,6 +1,7 @@
 package org.kushinae.yone.client;
 
 import org.kushinae.yone.client.actuator.AbsRDBActuator;
+import org.kushinae.yone.client.annotation.SkipInterceptor;
 import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.properties.RDBProperties;
 
@@ -33,6 +34,7 @@ public abstract class AbsRDBClient<T> implements Client<T> {
     }
 
     @Override
+    @SkipInterceptor
     public GlobalConfiguration getConfiguration() {
         return this.configuration;
     }

@@ -8,8 +8,8 @@ import org.kushinae.yone.commons.model.exception.UnsupportedDataSourceException;
  */
 public enum EDataSourceType {
 
-    MY_SQL(0, "mysql", null, "mysql", "SELECT VERSION()"),
-    SQL_SERVER(1, "sql_server", null, "sql_server", "SELECT VERSION()"),
+    MY_SQL(0, "mysql", null, "mysql", "SELECT VERSION()", "com.mysql.cj.jdbc.Driver"),
+    SQL_SERVER(1, "sql_server", null, "sql_server", "SELECT VERSION()", "com.mysql.cj.jdbc.Driver"),
     ;
 
     public static EDataSourceType code(Integer typeCode) {
@@ -22,12 +22,13 @@ public enum EDataSourceType {
         throw new UnsupportedDataSourceException();
     }
 
-    EDataSourceType(Integer code, String name, String version, String pluginName, String testConnectionScript) {
+    EDataSourceType(Integer code, String name, String version, String pluginName, String testConnectionScript, String drive) {
         this.code = code;
         this.name = name;
         this.version = version;
         this.pluginName = pluginName;
         this.testConnectionScript = testConnectionScript;
+        this.drive = drive;
     }
 
     /**
@@ -52,7 +53,15 @@ public enum EDataSourceType {
      */
     private String pluginName;
 
+    /**
+     * 测试连通性脚本
+     */
     private String testConnectionScript;
+
+    /**
+     * 驱动类
+     */
+    private String drive;
 
     public Integer getCode() {
         return code;
@@ -92,5 +101,13 @@ public enum EDataSourceType {
 
     public void setTestConnectionScript(String testConnectionScript) {
         this.testConnectionScript = testConnectionScript;
+    }
+
+    public String getDrive() {
+        return drive;
+    }
+
+    public void setDrive(String drive) {
+        this.drive = drive;
     }
 }

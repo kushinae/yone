@@ -1,9 +1,11 @@
 package org.kushinae.yone.client;
 
 import org.kushinae.yone.client.actuator.Actuator;
+import org.kushinae.yone.client.annotation.SkipInterceptor;
 import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.properties.Properties;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,6 +16,11 @@ import java.util.List;
  */
 @SuppressWarnings({"unused"})
 public interface Client<T> {
+
+    /**
+     * 获取连接对象
+     */
+    Connection getConnection();
 
     /**
      * get current data source type code
@@ -83,6 +90,7 @@ public interface Client<T> {
 
     List<T> executeWithListResult(String script);
 
+    @SkipInterceptor
     void setConfiguration(GlobalConfiguration configuration);
 
     GlobalConfiguration getConfiguration();
