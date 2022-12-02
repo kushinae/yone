@@ -9,7 +9,7 @@ import org.kushinae.yone.commons.model.properties.RDBProperties;
  * @author bnyte
  * @since 1.0.0
  */
-public abstract class AbsRDBClient<T> implements Client<T> {
+public abstract class AbsRDBIClient<T> implements IClient<T> {
 
     private RDBProperties properties;
 

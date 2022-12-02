@@ -21,10 +21,10 @@ public abstract class Yone {
      * @param dataSourceTypeCode 数据源类型
      * @return 数据源客户端对象
      */
-    public static Client<Object> client(Integer dataSourceTypeCode) {
+    public static IClient<Object> client(Integer dataSourceTypeCode) {
         config();
-        Client client = ClientFactory.createClient(EDataSourceType.code(dataSourceTypeCode));
-        return new ProxyFactory<Object>(client, configuration).createInstance();
+        IClient IClient = ClientFactory.createClient(EDataSourceType.code(dataSourceTypeCode));
+        return new ProxyFactory<Object>(IClient, configuration).createInstance();
     }
 
 
@@ -32,19 +32,19 @@ public abstract class Yone {
      * 获取数据源客户端对象
      *  通过该方式获取到数据源对象需要执行其对应 #build(Properties properties) 否则无法执行数据库相关语句
      *  如果执行则会被拦截器给拦截见下面拦截器介绍
-     * @see Client#build(Properties)
+     * @see IClient#build(Properties)
      *  所有rdb类型数据源对象都应该通过该方式进行属性对象构建，如果没有执行该方法则视为未初始化数据源参数，则会构建数据源对象失败
-     * @see org.kushinae.yone.client.interceptor.PropertiesBuildInterceptor#before(Client, Method, Object[]) 默认拦截器
+     * @see org.kushinae.yone.client.interceptor.PropertiesBuildInterceptor#before(IClient, Method, Object[]) 默认拦截器
      *  所有数据源客户端对象应该添加该拦截器以避免不必要异常
      * @param dataSourceTypeCode 数据源类型
      * @param genericType 默认返回结果集对象字节码对象类型
      * @return 数据源客户端对象
      * @param <T> 返回结果集范型类型
      */
-    public static <T> Client<T> client(Integer dataSourceTypeCode, Class<T> genericType) {
+    public static <T> IClient<T> client(Integer dataSourceTypeCode, Class<T> genericType) {
         config();
-        Client<T> client = ClientFactory.createClient(EDataSourceType.code(dataSourceTypeCode), genericType);
-        return new ProxyFactory<T>(client, configuration).createInstance();
+        IClient<T> IClient = ClientFactory.createClient(EDataSourceType.code(dataSourceTypeCode), genericType);
+        return new ProxyFactory<T>(IClient, configuration).createInstance();
     }
 
     /**
@@ -53,12 +53,12 @@ public abstract class Yone {
      * @param properties 数据源客户端参数对象
      * @return 数据源客户端对象
      */
-    public static Client<?> client(Integer dataSourceTypeCode, Properties properties) {
+    public static IClient<?> client(Integer dataSourceTypeCode, Properties properties) {
         config();
-        Client client = ClientFactory
+        IClient IClient = ClientFactory
                 .createClient(EDataSourceType.code(dataSourceTypeCode))
                 .build(properties);
-        return new ProxyFactory<Object>(client, configuration).createInstance();
+        return new ProxyFactory<Object>(IClient, configuration).createInstance();
     }
 
     /**
@@ -69,12 +69,12 @@ public abstract class Yone {
      * @return 数据源客户端对象
      * @param <T> 返回结果集范型类型
      */
-    public static <T> Client<T> client(Integer dataSourceTypeCode, Class<T> genericType, Properties properties) {
+    public static <T> IClient<T> client(Integer dataSourceTypeCode, Class<T> genericType, Properties properties) {
         config();
-        Client<T> client = ClientFactory
+        IClient<T> IClient = ClientFactory
                 .createClient(EDataSourceType.code(dataSourceTypeCode), genericType)
                 .build(properties);
-        return new ProxyFactory<T>(client, configuration).createInstance();
+        return new ProxyFactory<T>(IClient, configuration).createInstance();
     }
 
     /**

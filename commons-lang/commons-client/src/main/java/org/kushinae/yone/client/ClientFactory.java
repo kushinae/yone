@@ -1,6 +1,5 @@
 package org.kushinae.yone.client;
 
-import org.kushinae.yone.client.Client;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
 import org.kushinae.yone.commons.model.exception.ClientNotFoundException;
 
@@ -15,15 +14,15 @@ public class ClientFactory {
 
     // added java unchecked code style warnings
     @SuppressWarnings("unchecked")
-    protected static <T> Client<T> createClient(EDataSourceType dataSourceType, Class<T> resultType) {
+    protected static <T> IClient<T> createClient(EDataSourceType dataSourceType, Class<T> resultType) {
         //            Constructor<T> constructor = resultType.getConstructor();
 //            T instance = constructor.newInstance();
-        ServiceLoader<T> clients = (ServiceLoader<T>) ServiceLoader.load(Client.class);
-        Iterator<Client<T>> clientIterator = (Iterator<Client<T>>) clients.iterator();
+        ServiceLoader<T> clients = (ServiceLoader<T>) ServiceLoader.load(IClient.class);
+        Iterator<IClient<T>> clientIterator = (Iterator<IClient<T>>) clients.iterator();
         while (clientIterator.hasNext()) {
-            Client<T> client = clientIterator.next();
-            if (client.getDataSourceTypeCode().equals(dataSourceType.getCode())) {
-                return client;
+            IClient<T> IClient = clientIterator.next();
+            if (IClient.getDataSourceTypeCode().equals(dataSourceType.getCode())) {
+                return IClient;
             }
         }
 
@@ -32,13 +31,13 @@ public class ClientFactory {
 
     // added java unchecked code style warnings
     @SuppressWarnings("unchecked")
-    protected static Client<?> createClient(EDataSourceType dataSourceType) {
-        ServiceLoader<?> clients = ServiceLoader.load(Client.class);
-        Iterator<Client<?>> clientIterator = (Iterator<Client<?>>) clients.iterator();
+    protected static IClient<?> createClient(EDataSourceType dataSourceType) {
+        ServiceLoader<?> clients = ServiceLoader.load(IClient.class);
+        Iterator<IClient<?>> clientIterator = (Iterator<IClient<?>>) clients.iterator();
         while (clientIterator.hasNext()) {
-            Client<?> client = clientIterator.next();
-            if (client.getDataSourceTypeCode().equals(dataSourceType.getCode())) {
-                return client;
+            IClient<?> IClient = clientIterator.next();
+            if (IClient.getDataSourceTypeCode().equals(dataSourceType.getCode())) {
+                return IClient;
             }
         }
 

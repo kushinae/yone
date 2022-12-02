@@ -1,7 +1,7 @@
 package org.kushinae.yone.mysql.client;
 
-import org.kushinae.yone.client.AbsRDBClient;
-import org.kushinae.yone.client.Client;
+import org.kushinae.yone.client.AbsRDBIClient;
+import org.kushinae.yone.client.IClient;
 import org.kushinae.yone.client.actuator.mysql.MySQLActuator;
 import org.kushinae.yone.client.annotation.InterceptorAdvice;
 import org.kushinae.yone.client.annotation.SkipInterceptor;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @InterceptorAdvice(
         {PropertiesBuildInterceptor.class}
 )
-public class MySQLClient<T> extends AbsRDBClient<T> {
+public class MySQLClient<T> extends AbsRDBIClient<T> {
 
     protected volatile MySQLActuator<T> actuator;
 
@@ -67,7 +67,7 @@ public class MySQLClient<T> extends AbsRDBClient<T> {
 
     @Override
     @SkipInterceptor
-    public Client<T> build(Properties properties) {
+    public IClient<T> build(Properties properties) {
         actuator = new MySQLActuator<>((MySQLProperties) properties);
         return this;
     }

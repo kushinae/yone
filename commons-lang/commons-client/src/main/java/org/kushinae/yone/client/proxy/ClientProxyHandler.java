@@ -1,6 +1,6 @@
 package org.kushinae.yone.client.proxy;
 
-import org.kushinae.yone.client.Client;
+import org.kushinae.yone.client.IClient;
 import org.kushinae.yone.client.annotation.InterceptorAdvice;
 import org.kushinae.yone.client.annotation.SkipInterceptor;
 import org.kushinae.yone.client.interceptor.Interceptor;
@@ -28,7 +28,7 @@ public class ClientProxyHandler<T> implements InvocationHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ClientProxyHandler.class);
 
-    private Client<T> targetClient;
+    private IClient<T> targetIClient;
 
     private GlobalConfiguration configuration;
 
@@ -42,12 +42,12 @@ public class ClientProxyHandler<T> implements InvocationHandler {
 
     private InterceptorAdvice interceptorAdvice;
 
-    public Client<T> getTargetClient() {
-        return targetClient;
+    public IClient<T> getTargetClient() {
+        return targetIClient;
     }
 
-    public void setTargetClient(Client<T> targetClient) {
-        this.targetClient = targetClient;
+    public void setTargetClient(IClient<T> targetIClient) {
+        this.targetIClient = targetIClient;
     }
 
     public GlobalConfiguration getConfiguration() {
@@ -66,11 +66,11 @@ public class ClientProxyHandler<T> implements InvocationHandler {
         this.proxyFactory = proxyFactory;
     }
 
-    public ClientProxyHandler(GlobalConfiguration configuration, ProxyFactory<T> proxyFactory, Client<T> targetClient) {
+    public ClientProxyHandler(GlobalConfiguration configuration, ProxyFactory<T> proxyFactory, IClient<T> targetIClient) {
         this.configuration = configuration;
         this.proxyFactory = proxyFactory;
-        this.targetClient = targetClient;
-        defaultMethodLookup = MethodHandlersUtils.lookup(targetClient.getClass());
+        this.targetIClient = targetIClient;
+        defaultMethodLookup = MethodHandlersUtils.lookup(targetIClient.getClass());
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ClientProxyHandler<T> implements InvocationHandler {
 
         // 是否跳过拦截器
         if (isSkipInterceptor(method)) {
-            return method.invoke(targetClient, args);
+            return method.invoke(targetIClient, args);
         }
 
         // 执行之前获取所有拦截器
@@ -93,7 +93,7 @@ public class ClientProxyHandler<T> implements InvocationHandler {
 
         if (!endMethodExecution) {
             // 执行目标方法
-            invoke = method.invoke(targetClient, args);
+            invoke = method.invoke(targetIClient, args);
 
             // 目标方法执行结果
 
@@ -107,13 +107,13 @@ public class ClientProxyHandler<T> implements InvocationHandler {
         for (Class<? extends Interceptor> interceptor : interceptors) {
             Constructor<? extends Interceptor> constructor = interceptor.getConstructor();
             Interceptor instance = constructor.newInstance();
-            Method before = interceptor.getMethod("after", Client.class);
-            before.invoke(instance, targetClient);
+            Method before = interceptor.getMethod("after", IClient.class);
+            before.invoke(instance, targetIClient);
         }
     }
 
     private boolean isSkipInterceptor(Method method) {
-        interceptorAdvice = targetClient.getClass().getAnnotation(InterceptorAdvice.class);
+        interceptorAdvice = targetIClient.getClass().getAnnotation(InterceptorAdvice.class);
         if (Objects.nonNull(interceptorAdvice)) {
             List<String> skipMethods = Arrays.asList(interceptorAdvice.skipMethods());
             if (!CollectionUtils.isEmpty(skipMethods)) {
@@ -133,7 +133,7 @@ public class ClientProxyHandler<T> implements InvocationHandler {
 
     private Method getCurrentImplInvokeMethod(Method method) {
         try {
-            return targetClient.getClass().getMethod(method.getName(), method.getParameterTypes());
+            return targetIClient.getClass().getMethod(method.getName(), method.getParameterTypes());
         } catch (NoSuchMethodException e) {
             return null;
         }
@@ -144,8 +144,8 @@ public class ClientProxyHandler<T> implements InvocationHandler {
             for (Class<? extends Interceptor> interceptor : interceptors) {
                 Constructor<? extends Interceptor> constructor = interceptor.getConstructor();
                 Interceptor instance = constructor.newInstance();
-                Method before = interceptor.getMethod("before", Client.class, Method.class, Object[].class);
-                endMethodExecution = !(boolean) before.invoke(instance, targetClient, method, args);
+                Method before = interceptor.getMethod("before", IClient.class, Method.class, Object[].class);
+                endMethodExecution = !(boolean) before.invoke(instance, targetIClient, method, args);
                 if (log.isDebugEnabled())
                     if (endMethodExecution)
                         log.debug("The interceptor {}#before() terminated the execution of the target method", instance.getClass().getName());
@@ -167,12 +167,12 @@ public class ClientProxyHandler<T> implements InvocationHandler {
     private Object invokeDefaultMethod(Object proxy, Method method, Object[] args) throws Throwable {
         return defaultMethodLookup.findSpecial(
                 // 从中查询的类或者接口
-                targetClient.getClass(),
+                targetIClient.getClass(),
                 // 方法名称
                 method.getName(),
                 // 方法句柄类型 方法返回值以及方法形参类型列表
                 MethodType.methodType(method.getReturnType(), method.getParameterTypes()),
-                targetClient.getClass()
+                targetIClient.getClass()
         ).bindTo(proxy).invokeWithArguments(args);
     }
 
