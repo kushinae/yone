@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @InterceptorAdvice(
         {PropertiesBuildInterceptor.class}
 )
-public class MySQLClient extends AbsRDBIClient {
+public class MySQLClient implements IClient {
 
     protected volatile MySQLActuator actuator;
 
@@ -134,6 +134,16 @@ public class MySQLClient extends AbsRDBIClient {
 
     @Override
     public <R> List<R> executeWithListResult(String script, Class<R> resultClass) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public void setConfiguration(GlobalConfiguration configuration) {
+
+    }
+
+    @Override
+    public GlobalConfiguration getConfiguration() {
         return null;
     }
 

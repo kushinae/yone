@@ -1,27 +1,9 @@
-#- name: TODO to Issue
-#  uses: alstr/todo-to-issue-action@v4
 name: "Run TODO to Issue"
-on:
-  push:
-  workflow_dispatch:
-    inputs:
-      MANUAL_COMMIT_REF:
-        description: "获取差异的提交的 SHA"
-        required: true
-      MANUAL_BASE_REF:
-        description: "默认情况下，上面输入的提交与它之前的提交进行比较；要进一步返回，请在此处输入较早的 SHA"
-        required: false
+on: ["push"]
 jobs:
   build:
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v3"
       - name: "TODO to Issue"
-        uses: "alstr/todo-to-issue-action@master"
-        env:
-          MANUAL_COMMIT_REF:
-            ${{ inputs.MANUAL_COMMIT_REF }}
-          MANUAL_BASE_REF:
-            ${{ inputs.MANUAL_BASE_REF }}
-        with:
-          PROJECTS_SECRET: ${{ secrets.PROJECTS_SECRET }}
+        uses: "alstr/todo-to-issue-action@v4"
