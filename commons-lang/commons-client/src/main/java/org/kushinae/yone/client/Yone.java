@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author bnyte
  * @since 1.0.0
  */
-// TODO: 2023/3/3 测试todo转issue
+// TODO: 测试todo转issue
 public abstract class Yone {
 
     private static GlobalConfiguration configuration;
