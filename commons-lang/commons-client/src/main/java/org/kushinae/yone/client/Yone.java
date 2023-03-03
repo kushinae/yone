@@ -5,7 +5,6 @@ import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
 import org.kushinae.yone.commons.model.properties.Properties;
 
-import java.lang.reflect.Method;
 import java.util.Objects;
 
 // TODO: 2023/3/3 测试todo转issue 

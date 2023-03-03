@@ -36,6 +36,7 @@ jobs:
         env:
           MANUAL_COMMIT_REF: ${{ inputs.MANUAL_COMMIT_REF }}
           MANUAL_BASE_REF: ${{ inputs.MANUAL_BASE_REF }}
+          PROJECTS_SECRET: ${{ secrets.SECRET_TOKEN }}
         with:
           AUTO_ASSIGN: true
           AUTO_P: true
