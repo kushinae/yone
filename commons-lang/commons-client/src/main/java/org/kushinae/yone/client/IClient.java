@@ -15,7 +15,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @SuppressWarnings({"unused"})
-public interface IClient<T> {
+public interface IClient {
 
     /**
      * 获取连接对象
@@ -32,7 +32,7 @@ public interface IClient<T> {
      * get current data source actuator
      * @return actuator can execute target sql
      */
-    Actuator<T> getActuator();
+    Actuator getActuator();
 
     /**
      * 执行脚本
@@ -53,7 +53,7 @@ public interface IClient<T> {
      * @param properties 属性对象 通过自定义构建进行指定，不同的数据源客户端使用的属性对象也不同
      * @return 返回当前构建完成之后的属性对象 可以不适用 该客户端是通过this进行赋值所以返回的对象和this是同一个对象
      */
-    IClient<T> build(Properties properties);
+    IClient build(Properties properties);
 
     /**
      * 测试当前客户端与数据源目标的连通性状态
@@ -88,7 +88,7 @@ public interface IClient<T> {
 
     <R> R executeQueryWithSingleResult(String script, Class<R> resultClass) throws Exception;
 
-    List<T> executeWithListResult(String script);
+    <R> List<R> executeWithListResult(String script, Class<R> resultClass) throws SQLException;
 
     @SkipInterceptor
     void setConfiguration(GlobalConfiguration configuration);

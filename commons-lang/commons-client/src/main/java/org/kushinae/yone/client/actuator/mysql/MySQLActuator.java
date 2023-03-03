@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author bnyte
  * @since 1.0.0
  */
-public class MySQLActuator<T> extends AbsRDBActuator<T> {
+public class MySQLActuator extends AbsRDBActuator {
 
     public MySQLActuator(MySQLProperties properties) {
         super(properties);

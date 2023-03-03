@@ -11,22 +11,22 @@ import java.util.Objects;
  * @since 1.0.0
  */
 @SuppressWarnings("unused")
-public class ProxyFactory<T> {
+public class ProxyFactory {
 
-    private IClient<T> IClientInstance;
+    private IClient IClientInstance;
 
     private GlobalConfiguration configuration;
 
-    public ProxyFactory(IClient<T> IClientInstance, GlobalConfiguration configuration) {
+    public ProxyFactory(IClient IClientInstance, GlobalConfiguration configuration) {
         this.IClientInstance = IClientInstance;
         this.configuration = configuration;
     }
 
-    public IClient<T> getClientClass() {
+    public IClient getClientClass() {
         return IClientInstance;
     }
 
-    public void setClientClass(IClient<T> IClientClass) {
+    public void setClientClass(IClient IClientClass) {
         this.IClientInstance = IClientClass;
     }
 
@@ -39,15 +39,15 @@ public class ProxyFactory<T> {
     }
 
     @SuppressWarnings({"unchecked"})
-    public IClient<T> createInstance() {
+    public IClient createInstance() {
         // 先从缓存中获取确定是否存在
-        IClient<T> instance = (IClient<T>) configuration.getClientCache().get(IClientInstance.getClass());
+        IClient instance = (IClient) configuration.getClientCache().get(IClientInstance.getClass());
         if (Objects.isNull(instance)) {
             synchronized (configuration.getClientCache()) {
                 // 创建客户端代理处理器
-                ClientProxyHandler<T> handler = new ClientProxyHandler<>(configuration, this, IClientInstance);
+                ClientProxyHandler handler = new ClientProxyHandler(configuration, this, IClientInstance);
                 // 创建代理对象
-                instance = (IClient<T>) Proxy.newProxyInstance(IClientInstance.getClass().getClassLoader(), new Class[]{IClient.class, ClientProxy.class}, handler);
+                instance = (IClient) Proxy.newProxyInstance(IClientInstance.getClass().getClassLoader(), new Class[]{IClient.class, ClientProxy.class}, handler);
                 instance.setConfiguration(configuration);
                 configuration.getClientCache().put(instance.getClass(), instance);
             }

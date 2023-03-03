@@ -1,5 +1,6 @@
 package org.kushinae.yone.mysql.client;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.kushinae.yone.client.IClient;
 import org.kushinae.yone.client.Yone;
@@ -18,29 +19,29 @@ class MySQLClientTest {
 
     {
         properties = new MySQLProperties();
-        properties.setIp("121.40.209.124");
-        properties.setPort(6033);
-        properties.setDatabase("bnyte");
+        properties.setIp("127.0.0.1");
+        properties.setPort(3306);
+        properties.setDatabase("yong");
         properties.setUsername("root");
-        properties.setPassword("5c2891d9-45fb-4240-9f0e-50222099d9bd");
+        properties.setPassword("123456");
     }
 
     @Test
     void getDataSourceTypeCode() {
         IClient<MySQLProperties> IClient = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class);
-        assert IClient.getDataSourceTypeCode().equals(EDataSourceType.MY_SQL.getCode());
+        Assertions.assertEquals(IClient.getDataSourceTypeCode(), EDataSourceType.MY_SQL.getCode());
     }
 
     @Test
     void getActuator() {
-        IClient<MySQLProperties> IClient = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class, properties);
-        assert Objects.nonNull(IClient.getActuator());
+        IClient<MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class, properties);
+        Assertions.assertNotNull(client);
     }
 
     @Test
     void getProperties() {
-        IClient<MySQLProperties> IClient = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class, properties);
-        assert Objects.nonNull(IClient);
+        IClient<MySQLProperties> client = Yone.client(EDataSourceType.MY_SQL.getCode(), MySQLProperties.class, properties);
+        Assertions.assertNotNull(client);
     }
 
     @Test

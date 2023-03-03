@@ -1,6 +1,5 @@
 package org.kushinae.yone.mysql.client;
 
-import org.kushinae.yone.client.AbsRDBIClient;
 import org.kushinae.yone.client.IClient;
 import org.kushinae.yone.client.actuator.mysql.MySQLActuator;
 import org.kushinae.yone.client.annotation.InterceptorAdvice;
@@ -18,7 +17,8 @@ import org.kushinae.yone.commons.model.util.ObjectUtils;
 import org.kushinae.yone.commons.model.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
 @InterceptorAdvice(
         {PropertiesBuildInterceptor.class}
 )
-public class MySQLClient<T> extends AbsRDBIClient<T> {
+public class MySQLClient extends AbsRDBIClient {
 
-    protected volatile MySQLActuator<T> actuator;
+    protected volatile MySQLActuator actuator;
 
     @Override
     public Connection getConnection() {
@@ -49,11 +49,11 @@ public class MySQLClient<T> extends AbsRDBIClient<T> {
     }
 
     @Override
-    public MySQLActuator<T> getActuator() {
+    public MySQLActuator getActuator() {
         if (actuator == null) {
             synchronized (MySQLClient.class) {
                 if (actuator == null) {
-                    actuator = new MySQLActuator<>(getProperties());
+                    actuator = new MySQLActuator(getProperties());
                 }
             }
         }
@@ -67,8 +67,8 @@ public class MySQLClient<T> extends AbsRDBIClient<T> {
 
     @Override
     @SkipInterceptor
-    public IClient<T> build(Properties properties) {
-        actuator = new MySQLActuator<>((MySQLProperties) properties);
+    public IClient build(Properties properties) {
+        actuator = new MySQLActuator((MySQLProperties) properties);
         return this;
     }
 
@@ -121,7 +121,6 @@ public class MySQLClient<T> extends AbsRDBIClient<T> {
         ResultSet query = connection.createStatement().executeQuery(script);
         Constructor<R> resultConstructor = resultClass.getConstructor();
         R instance = resultConstructor.newInstance();
-        GlobalConfiguration configuration = getConfiguration();
 
         while (query.next()) {
             for (Field field : resultClass.getDeclaredFields()) {
@@ -133,6 +132,11 @@ public class MySQLClient<T> extends AbsRDBIClient<T> {
         return instance;
     }
 
+    @Override
+    public <R> List<R> executeWithListResult(String script, Class<R> resultClass) throws SQLException {
+        return null;
+    }
+
     private Object getColumnDataWithFieldType(Field field, ResultSet resultSet) throws SQLException {
         GlobalConfiguration configuration = getConfiguration();
         String columnLabel = configuration.getEnableCamelCase() ? StringUtils.lowerCamel2LowerUnderscore(field.getName()) : field.getName();
@@ -140,11 +144,6 @@ public class MySQLClient<T> extends AbsRDBIClient<T> {
         if (EDataTypeTransfer.basicDataType(fieldType)) {
             return EJavaBasicDataType.transfer(fieldType).getDataWithFieldType(columnLabel, resultSet);
         }
-        return null;
-    }
-
-    @Override
-    public List<T> executeWithListResult(String script) {
         return null;
     }
 

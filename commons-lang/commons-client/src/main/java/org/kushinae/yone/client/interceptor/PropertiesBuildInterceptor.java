@@ -14,12 +14,12 @@ import java.util.Arrays;
  * @author bnyte
  * @since 1.0.0
  */
-public class PropertiesBuildInterceptor<T> implements Interceptor<T> {
+public class PropertiesBuildInterceptor implements Interceptor {
 
     private static final Logger log = LoggerFactory.getLogger(PropertiesBuildInterceptor.class);
 
     @Override
-    public boolean before(IClient<T> IClient, Method method, Object[] args) {
+    public boolean before(IClient IClient, Method method, Object[] args) {
         SkipInterceptor skipInterceptor = method.getAnnotation(SkipInterceptor.class);
         Boolean complete = IClient.buildComplete();
         if (!complete && ObjectUtils.isNull(skipInterceptor)) {
@@ -30,7 +30,7 @@ public class PropertiesBuildInterceptor<T> implements Interceptor<T> {
     }
 
     @Override
-    public void after(IClient<T> IClient) {
+    public void after(IClient IClient) {
         Interceptor.super.after(IClient);
     }
 }

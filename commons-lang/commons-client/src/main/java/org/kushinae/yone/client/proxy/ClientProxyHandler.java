@@ -24,15 +24,15 @@ import java.util.Objects;
  * @author bnyte
  * @since 1.0.0
  */
-public class ClientProxyHandler<T> implements InvocationHandler {
+public class ClientProxyHandler implements InvocationHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ClientProxyHandler.class);
 
-    private IClient<T> targetIClient;
+    private IClient targetIClient;
 
     private GlobalConfiguration configuration;
 
-    private ProxyFactory<T> proxyFactory;
+    private ProxyFactory proxyFactory;
 
     private final MethodHandles.Lookup defaultMethodLookup;
 
@@ -42,11 +42,11 @@ public class ClientProxyHandler<T> implements InvocationHandler {
 
     private InterceptorAdvice interceptorAdvice;
 
-    public IClient<T> getTargetClient() {
+    public IClient getTargetClient() {
         return targetIClient;
     }
 
-    public void setTargetClient(IClient<T> targetIClient) {
+    public void setTargetClient(IClient targetIClient) {
         this.targetIClient = targetIClient;
     }
 
@@ -58,15 +58,15 @@ public class ClientProxyHandler<T> implements InvocationHandler {
         this.configuration = configuration;
     }
 
-    public ProxyFactory<T> getProxyFactory() {
+    public ProxyFactory getProxyFactory() {
         return proxyFactory;
     }
 
-    public void setProxyFactory(ProxyFactory<T> proxyFactory) {
+    public void setProxyFactory(ProxyFactory proxyFactory) {
         this.proxyFactory = proxyFactory;
     }
 
-    public ClientProxyHandler(GlobalConfiguration configuration, ProxyFactory<T> proxyFactory, IClient<T> targetIClient) {
+    public ClientProxyHandler(GlobalConfiguration configuration, ProxyFactory proxyFactory, IClient targetIClient) {
         this.configuration = configuration;
         this.proxyFactory = proxyFactory;
         this.targetIClient = targetIClient;

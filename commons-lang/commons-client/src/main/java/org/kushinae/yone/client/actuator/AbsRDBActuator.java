@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * @author bnyte
  * @since 1.0.0
  */
-public abstract class AbsRDBActuator<T> implements Actuator<T> {
+public abstract class AbsRDBActuator implements Actuator {
 
     protected volatile Connection connection;
 
