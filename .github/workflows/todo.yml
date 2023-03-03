@@ -12,4 +12,4 @@ jobs:
       - name: "TODO to Issue"
         uses: "alstr/todo-to-issue-action@v4"
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          PROJECTS_SECRET: ${{ secrets.GITHUB_TOKEN }}
