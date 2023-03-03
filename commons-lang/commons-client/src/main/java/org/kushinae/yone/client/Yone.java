@@ -34,6 +34,7 @@ public abstract class Yone {
      */
     public static IClient client(Integer dataSourceTypeCode, Properties properties) {
         config();
+        // TODO nikan
         IClient IClient = ClientFactory
                 .createClient(EDataSourceType.code(dataSourceTypeCode))
                 .build(properties);
@@ -45,7 +46,6 @@ public abstract class Yone {
      * @return 配置对象
      */
     public static GlobalConfiguration config() {
-        // TODO 新的吧
         if (Objects.isNull(configuration)) {
             synchronized (Yone.class) {
                 if (Objects.isNull(configuration)) {
