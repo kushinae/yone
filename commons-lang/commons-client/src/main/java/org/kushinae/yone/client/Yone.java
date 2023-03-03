@@ -21,7 +21,6 @@ public abstract class Yone {
      * @return 数据源客户端对象
      */
     public static IClient client(Integer dataSourceTypeCode) {
-        // TODO 哈哈哈
         config();
         IClient IClient = ClientFactory.createClient(EDataSourceType.code(dataSourceTypeCode));
         return new ProxyFactory(IClient, configuration).createInstance();
@@ -34,6 +33,7 @@ public abstract class Yone {
      * @return 数据源客户端对象
      */
     public static IClient client(Integer dataSourceTypeCode, Properties properties) {
+        // TODO 哈哈哈
         config();
         IClient IClient = ClientFactory
                 .createClient(EDataSourceType.code(dataSourceTypeCode))
