@@ -11,7 +11,6 @@ import java.util.Objects;
  * @author bnyte
  * @since 1.0.0
  */
-// TODO: 测试todo转issue
 public abstract class Yone {
 
     private static GlobalConfiguration configuration;
@@ -22,6 +21,7 @@ public abstract class Yone {
      * @return 数据源客户端对象
      */
     public static IClient client(Integer dataSourceTypeCode) {
+        // TODO 哈哈哈
         config();
         IClient IClient = ClientFactory.createClient(EDataSourceType.code(dataSourceTypeCode));
         return new ProxyFactory(IClient, configuration).createInstance();
