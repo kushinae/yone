@@ -34,7 +34,7 @@ public abstract class Yone {
      */
     public static IClient client(Integer dataSourceTypeCode, Properties properties) {
         config();
-        // TODO nikan
+        // TODO 来吧
         IClient IClient = ClientFactory
                 .createClient(EDataSourceType.code(dataSourceTypeCode))
                 .build(properties);
