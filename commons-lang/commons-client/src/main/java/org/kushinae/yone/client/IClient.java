@@ -55,6 +55,8 @@ public interface IClient {
      */
     IClient build(Properties properties);
 
+    void buildBeforeAssert(Properties properties);
+
     /**
      * 测试当前客户端与数据源目标的连通性状态
      * @return 返回是否连接成功 true：成功 false：失败
@@ -74,9 +76,8 @@ public interface IClient {
      * 获取当前数据源所有库
      * @param skipDefault 是否跳过当前数据源的默认数据库
      * @return 数据库列表
-     * @throws SQLException 脚本执行异常
      */
-    List<String> databases(boolean skipDefault) throws SQLException;
+    List<String> databases(boolean skipDefault);
 
     /**
      * 获取当前数据库的所有数据库表列表名称
@@ -86,9 +87,9 @@ public interface IClient {
      */
     List<String> tables(String database) throws SQLException;
 
-    <R> R executeQueryWithSingleResult(String script, Class<R> resultClass) throws Exception;
+    <R> R executeQueryWithSingleResult(String script, Class<R> resultClass);
 
-    <R> List<R> executeWithListResult(String script, Class<R> resultClass) throws SQLException;
+    <R> List<R> executeWithListResult(String script, Class<R> resultClass);
 
     @SkipInterceptor
     void setConfiguration(GlobalConfiguration configuration);

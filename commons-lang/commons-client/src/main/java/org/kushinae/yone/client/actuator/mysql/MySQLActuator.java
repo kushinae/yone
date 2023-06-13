@@ -1,7 +1,6 @@
 package org.kushinae.yone.client.actuator.mysql;
 
-import org.kushinae.yone.client.actuator.AbsRDBActuator;
-import org.kushinae.yone.client.actuator.Actuator;
+import org.kushinae.yone.client.actuator.AbstractRDBMSActuator;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
 import org.kushinae.yone.commons.model.properties.Properties;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
@@ -17,7 +16,7 @@ import java.util.Objects;
  * @author bnyte
  * @since 1.0.0
  */
-public class MySQLActuator extends AbsRDBActuator {
+public class MySQLActuator extends AbstractRDBMSActuator {
 
     public MySQLActuator(MySQLProperties properties) {
         super(properties);
@@ -63,7 +62,7 @@ public class MySQLActuator extends AbsRDBActuator {
                 this.properties.getIp() +
                 ":" +
                 (Objects.isNull(properties.getPort()) ? "3306" : properties.getPort()) +
-                "/" +
-                properties.getDatabase();
+                (StringUtils.hasText(properties.getDatabase()) ? ("/" +
+                properties.getDatabase()) : "");
     }
 }

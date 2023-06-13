@@ -15,7 +15,14 @@ public abstract class StringUtils {
         if (Objects.isNull(text)) {
             return false;
         }
-        return text.length() != 0;
+        return text.length() > 0;
+    }
+
+    public static Boolean nonText(String text) {
+        if (Objects.isNull(text)) {
+            return false;
+        }
+        return text.length() == 0;
     }
 
     /**
