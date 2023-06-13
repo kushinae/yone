@@ -12,7 +12,6 @@
     <packaging>jar</packaging>
 
     <name>mysql-plugin</name>
-    <version>1.0.0</version>
     <url>http://maven.apache.org</url>
 
     <properties>
