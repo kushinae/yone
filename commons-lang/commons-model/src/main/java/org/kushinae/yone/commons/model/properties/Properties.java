@@ -62,7 +62,7 @@ public class Properties {
     }
 
     public Properties password(String password) {
-        this.setUsername(password);
+        this.setPassword(password);
         return this;
     }
 
