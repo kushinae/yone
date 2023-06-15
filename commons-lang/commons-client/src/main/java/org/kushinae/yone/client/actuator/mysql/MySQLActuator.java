@@ -59,7 +59,7 @@ public class MySQLActuator extends AbstractRDBMSActuator {
 
     private String getJdbcURL() {
         return "jdbc:mysql://" +
-                this.properties.getIp() +
+                this.properties.getHost() +
                 ":" +
                 (Objects.isNull(properties.getPort()) ? "3306" : properties.getPort()) +
                 (StringUtils.hasText(properties.getDatabase()) ? ("/" +

@@ -6,7 +6,7 @@ package org.kushinae.yone.commons.model.properties;
  */
 public class Properties {
 
-    private String ip;
+    private String host;
 
     private Integer port;
 
@@ -14,12 +14,12 @@ public class Properties {
 
     private String password;
 
-    public String getIp() {
-        return ip;
+    public String getHost() {
+        return host;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public Integer getPort() {
@@ -46,10 +46,30 @@ public class Properties {
         this.password = password;
     }
 
+    public Properties host(String host) {
+        this.setHost(host);
+        return this;
+    }
+
+    public Properties port(Integer port) {
+        this.setPort(port);
+        return this;
+    }
+
+    public Properties username(String username) {
+        this.setUsername(username);
+        return this;
+    }
+
+    public Properties password(String password) {
+        this.setUsername(password);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Properties{" +
-                "ip='" + ip + '\'' +
+                "host='" + host + '\'' +
                 ", port=" + port +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

@@ -11,7 +11,7 @@ public class MySQLClientTest {
     @Test
     void testDatabases() {
         MySQLProperties properties = new MySQLProperties();
-        properties.setIp("127.0.0.1");
+        properties.setHost("127.0.0.1");
         properties.setPassword("123456");
         properties.setUsername("root");
         properties.setPort(3306);

@@ -83,9 +83,8 @@ public interface IClient {
      * 获取当前数据库的所有数据库表列表名称
      * @param database 指定数据库名
      * @return 指定数据库列表下的所有表名称
-     * @throws SQLException sql联通异常
      */
-    List<String> tables(String database) throws SQLException;
+    List<String> tables(String database);
 
     <R> R executeQueryWithSingleResult(String script, Class<R> resultClass);
 

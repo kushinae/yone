@@ -52,10 +52,9 @@ public abstract class AbstractRDBMSClient implements IClient {
     @Override
     @SkipInterceptor
     public void buildBeforeAssert(Properties properties) {
-        AssertUtils.hasText(properties.getIp(), "Data source host or ip cannot be empty.");
+        AssertUtils.hasText(properties.getHost(), "Data source host or ip cannot be empty.");
         AssertUtils.hasText(properties.getUsername(), "Data source username cannot be empty.");
         AssertUtils.hasText(properties.getPassword(), "Data source password cannot be empty.");
-        AssertUtils.notNull(properties.getPort(), "Data source port cannot be empty.");
     }
 
     @Override
@@ -93,14 +92,19 @@ public abstract class AbstractRDBMSClient implements IClient {
     }
 
     @Override
-    public List<String> tables(String database) throws SQLException {
+    public List<String> tables(String database) {
         List<String> tables = new ArrayList<>();
         getProperties().setDatabase(database);
         Connection connection = getConnection();
-        ResultSet query = connection.createStatement().executeQuery("show tables");
-        while (query.next()) {
-            String tableName = query.getString(1);
-            tables.add(tableName);
+        try {
+            ResultSet query = connection.createStatement().executeQuery("show tables");
+            while (query.next()) {
+                String tableName = query.getString(1);
+                tables.add(tableName);
+            }
+        } catch (SQLException e) {
+            // 暂时统一处理
+            throw new RuntimeException(e);
         }
         return tables;
     }

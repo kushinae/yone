@@ -26,6 +26,16 @@ public class RDBProperties extends Properties {
         this.drive = drive;
     }
 
+    public RDBProperties database(String database) {
+        setDatabase(database);
+        return this;
+    }
+
+    public RDBProperties drive(String drive) {
+        setDrive(drive);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "RDBProperties{" +
