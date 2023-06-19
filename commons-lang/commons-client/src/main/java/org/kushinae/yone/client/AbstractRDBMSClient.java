@@ -8,6 +8,7 @@ import org.kushinae.yone.commons.model.constant.ShowDatabasesConstant;
 import org.kushinae.yone.commons.model.enums.EDataSourceType;
 import org.kushinae.yone.commons.model.enums.EDataTypeTransfer;
 import org.kushinae.yone.commons.model.enums.EJavaBasicDataType;
+import org.kushinae.yone.commons.model.pojo.rdbms.Column;
 import org.kushinae.yone.commons.model.properties.Properties;
 import org.kushinae.yone.commons.model.properties.mysql.MySQLProperties;
 import org.kushinae.yone.commons.model.util.AssertUtils;
@@ -20,8 +21,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -107,6 +110,64 @@ public abstract class AbstractRDBMSClient implements IClient {
             throw new RuntimeException(e);
         }
         return tables;
+    }
+
+    @Override
+    public List<Column> columnDetails(String database, String table) {
+        if (StringUtils.hasText(database)) {
+            getProperties().setDatabase(database);
+        }
+        Connection connection = getConnection();
+        ArrayList<Column> columns = new ArrayList<>();
+        DatabaseMetaData metaData = null;
+        try {
+            metaData = connection.getMetaData();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            ResultSet columnsMetadata = metaData.getColumns(null, null, table, null);
+            while (columnsMetadata.next()) {
+                Column column = new Column();
+                String columnName = columnsMetadata.getString("COLUMN_NAME");
+                String dataType = columnsMetadata.getString("DATA_TYPE");
+                String typeName = columnsMetadata.getString("TYPE_NAME");
+                String comment = columnsMetadata.getString("REMARKS");
+                column.setName(columnName);
+                column.setDatatype(dataType);
+                column.setTypename(typeName);
+                column.setComment(comment);
+                columns.add(column);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return columns;
+    }
+
+    @Override
+    public List<String> columns(String database, String table) {
+        if (StringUtils.hasText(database)) {
+            getProperties().setDatabase(database);
+        }
+        Connection connection = getConnection();
+        ArrayList<String> columns = new ArrayList<>();
+        DatabaseMetaData metaData = null;
+        try {
+            metaData = connection.getMetaData();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            ResultSet columnsMetadata = metaData.getColumns(null, null, table, null);
+            while (columnsMetadata.next()) {
+                String columnName = columnsMetadata.getString("COLUMN_NAME");
+                columns.add(columnName);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return columns;
     }
 
     @Override

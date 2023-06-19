@@ -3,6 +3,7 @@ package org.kushinae.yone.client;
 import org.kushinae.yone.client.actuator.Actuator;
 import org.kushinae.yone.client.annotation.SkipInterceptor;
 import org.kushinae.yone.commons.model.configuration.GlobalConfiguration;
+import org.kushinae.yone.commons.model.pojo.rdbms.Column;
 import org.kushinae.yone.commons.model.properties.Properties;
 
 import java.sql.Connection;
@@ -85,6 +86,24 @@ public interface IClient {
      * @return 指定数据库列表下的所有表名称
      */
     List<String> tables(String database);
+
+    /**
+     * 获取表的字段详情列表
+     *
+     * @param database 所属数据库名称
+     * @param table 所属表名称
+     * @return 字段列表
+     */
+    List<Column> columnDetails(String database, String table);
+
+    /**
+     * 获取表的字段列表
+     *
+     * @param database 所属数据库名称
+     * @param table 所属表名称
+     * @return 字段列表
+     */
+    List<String> columns(String database, String table);
 
     <R> R executeQueryWithSingleResult(String script, Class<R> resultClass);
 
