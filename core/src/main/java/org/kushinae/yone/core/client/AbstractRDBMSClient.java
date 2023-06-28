@@ -226,6 +226,7 @@ public abstract class AbstractRDBMSClient implements IClient {
             columnLabel = columnAnnotation.name();
         }
         Class<?> fieldType = field.getType();
+        Object dbData = resultSet.getObject(columnLabel);
         if (EDataTypeTransfer.basicDataType(fieldType)) {
             return EJavaBasicDataType.transfer(fieldType).getDataWithFieldType(columnLabel, resultSet);
         } else if (Enum.class.isAssignableFrom(fieldType)) {
@@ -238,7 +239,6 @@ public abstract class AbstractRDBMSClient implements IClient {
                         Object instance = constructor.newInstance();
                         if (instance instanceof AttributeConverter) {
                             AttributeConverter<?, Object> fieldConverter = (AttributeConverter<?, Object>) instance;
-                            Object dbData = resultSet.getObject(columnLabel);
                             return fieldConverter.convertToEntityAttribute(dbData);
                         }
                     } catch (NoSuchMethodException e) {
