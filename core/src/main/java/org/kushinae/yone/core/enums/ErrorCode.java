@@ -14,6 +14,7 @@ public enum ErrorCode {
     UNKNOWN_EXCEPTION(-1, "%s"),
 
     PROPERTY_IS_INVALID(100000, "property object not initialized"),
+    DATA_TYPE_MAPPING_ERROR(100001, "data type mapping error"),
 
     CLIENT_NOT_FOUND(900000, "data source client not found"),
     UNSUPPORTED_DATASOURCE_TYPE(900001, "unsupported data source type"),

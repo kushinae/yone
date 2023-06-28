@@ -31,6 +31,9 @@ public class GlobalConfiguration {
         return GlobalConfiguration.globalConfiguration;
     }
 
+    protected GlobalConfiguration() {
+    }
+
     public void setClientCache(ConcurrentHashMap<Class<?>, Object> clientCache) {
         this.clientCache = clientCache;
     }

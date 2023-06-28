@@ -49,7 +49,7 @@ public abstract class Yone {
         if (Objects.isNull(configuration)) {
             synchronized (Yone.class) {
                 if (Objects.isNull(configuration)) {
-                    configuration = new GlobalConfiguration();
+                    configuration = GlobalConfiguration.getDefaultConfiguration();
                 }
             }
         }

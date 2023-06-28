@@ -1,5 +1,7 @@
 package org.kushinae.yone.core.client;
 
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Convert;
 import org.kushinae.yone.core.client.actuator.Actuator;
 import org.kushinae.yone.core.client.annotation.SkipInterceptor;
 import org.kushinae.yone.core.configuration.GlobalConfiguration;
@@ -8,12 +10,15 @@ import org.kushinae.yone.core.constant.ShowDatabasesConstant;
 import org.kushinae.yone.core.enums.EDataSourceType;
 import org.kushinae.yone.core.enums.EDataTypeTransfer;
 import org.kushinae.yone.core.enums.EJavaBasicDataType;
+import org.kushinae.yone.core.exception.TypeMappingException;
 import org.kushinae.yone.core.properties.Properties;
 import org.kushinae.yone.core.properties.mysql.MySQLProperties;
 import org.kushinae.yone.core.rdbms.Column;
 import org.kushinae.yone.core.util.AssertUtils;
 import org.kushinae.yone.core.util.ObjectUtils;
 import org.kushinae.yone.core.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -33,6 +38,8 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 public abstract class AbstractRDBMSClient implements IClient {
+
+    private static final Logger log = LoggerFactory.getLogger(AbstractRDBMSClient.class);
 
     protected volatile Actuator actuator;
     protected volatile GlobalConfiguration configuration;
@@ -171,7 +178,7 @@ public abstract class AbstractRDBMSClient implements IClient {
     }
 
     @Override
-    public <R> R executeQueryWithSingleResult(String script, Class<R> resultClass) {
+    public <R> R executeQueryWithSingle(String script, Class<R> resultClass) {
         R instance;
         try {
             Connection connection = getConnection();
@@ -214,9 +221,37 @@ public abstract class AbstractRDBMSClient implements IClient {
     protected Object getColumnDataWithFieldType(Field field, ResultSet resultSet) throws SQLException {
         GlobalConfiguration configuration = getConfiguration();
         String columnLabel = configuration.getEnableCamelCase() ? StringUtils.lowerCamel2LowerUnderscore(field.getName()) : field.getName();
+        jakarta.persistence.Column columnAnnotation = field.getDeclaredAnnotation(jakarta.persistence.Column.class);
+        if (ObjectUtils.nonNull(columnAnnotation)) {
+            columnLabel = columnAnnotation.name();
+        }
         Class<?> fieldType = field.getType();
         if (EDataTypeTransfer.basicDataType(fieldType)) {
             return EJavaBasicDataType.transfer(fieldType).getDataWithFieldType(columnLabel, resultSet);
+        } else if (Enum.class.isAssignableFrom(fieldType)) {
+            Convert convert = field.getDeclaredAnnotation(Convert.class);
+            if (ObjectUtils.nonNull(convert)) {
+                Class<?> converter = convert.converter();
+                if (ObjectUtils.nonNull(converter)) {
+                    try {
+                        Constructor<?> constructor = converter.getConstructor();
+                        Object instance = constructor.newInstance();
+                        if (instance instanceof AttributeConverter) {
+                            AttributeConverter<?, Object> fieldConverter = (AttributeConverter<?, Object>) instance;
+                            Object dbData = resultSet.getObject(columnLabel);
+                            return fieldConverter.convertToEntityAttribute(dbData);
+                        }
+                    } catch (NoSuchMethodException e) {
+                        if (log.isErrorEnabled()) {
+                            log.error("Data type mapping error {}", e.getMessage(), e);
+                        }
+                        throw new TypeMappingException();
+                    } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            return null;
         }
         return null;
     }

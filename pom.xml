@@ -21,6 +21,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.version>1.0.0-SNAPSHOT</project.version>
         <junit.version>5.9.0</junit.version>
+        <jpa.version>3.1.0</jpa.version>
+        <lombok.version>1.18.28</lombok.version>
 
         <!-- logback version -->
         <logback.version>1.4.3</logback.version>
@@ -75,7 +77,20 @@
                 <version>${guava.version}</version>
             </dependency>
 
+            <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
+            <!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>${jpa.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

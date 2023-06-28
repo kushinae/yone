@@ -105,7 +105,7 @@ public interface IClient {
      */
     List<String> columns(String database, String table);
 
-    <R> R executeQueryWithSingleResult(String script, Class<R> resultClass);
+    <R> R executeQueryWithSingle(String script, Class<R> resultClass);
 
     <R> List<R> executeWithListResult(String script, Class<R> resultClass);
 
