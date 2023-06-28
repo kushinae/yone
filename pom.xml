@@ -8,8 +8,8 @@
     <artifactId>yone</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <modules>
-        <module>mysql</module>
-        <module>commons-lang</module>
+        <module>core</module>
+        <module>plugins</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -37,13 +37,7 @@
         <dependencies>
             <dependency>
                 <groupId>org.kushinae</groupId>
-                <artifactId>yone-commons-model</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.kushinae</groupId>
-                <artifactId>yone-commons-client</artifactId>
+                <artifactId>yone-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
